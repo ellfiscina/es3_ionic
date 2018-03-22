@@ -4,6 +4,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { ImagePage } from '../image/image';
 
 @Component({
   selector: 'page-home',
@@ -12,12 +13,13 @@ import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device
 export class HomePage {
 	images = [];
 	grid: Array<Array<string>>;
-  lat: any;
-  lon: any;
+  lat = [];
+  lon = [];
   watchID: any;
-  x: string;
-  y: string;
-  z: string;
+  x = [];
+  y = [];
+  z = [];
+
   options: CameraOptions = {
     quality: 100,
     destinationType: this.camera.DestinationType.FILE_URI,
@@ -54,6 +56,8 @@ export class HomePage {
 
   async tiraFoto(): Promise<any>{
     try{
+      this.obterGeo();
+      this.obterAcc();
       this.images.push(await this.camera.getPicture(this.options));
       this.preencheGrid();
     }
@@ -66,8 +70,8 @@ export class HomePage {
     let geoOption = {enableHighAccuracy: true};
     try{
       this.watchID = this.geo.watchPosition(geoOption).subscribe(data =>{
-        this.lat = data.coords.latitude;
-        this.lon = data.coords.longitude;
+        this.lat.push(data.coords.latitude);
+        this.lon.push(data.coords.longitude);
       })
     }
     catch(err){
@@ -78,14 +82,29 @@ export class HomePage {
   obterAcc(){
     try{
       var option = {frequency: 200};
-      this.watchID = this.deviceMotion.watchAcceleration(option).subscribe((acc: DeviceMotionAccelerationData) => {
-        this.x = "" + acc.x;
-        this.y = "" + acc.y;
-        this.z = "" + acc.z;
+      this.watchID = this.deviceMotion.watchAcceleration(option)
+      .subscribe((acc: DeviceMotionAccelerationData) => {
+        this.x.push("" + acc.x);
+        this.y.push("" + acc.y);
+        this.z.push("" + acc.z);
       });
     }
     catch(err){
       alert("Erro " + err);
     }
+  }
+
+  imageClick(img){
+
+    let index = this.images.indexOf(img);
+    this.navCtrl.push(ImagePage, {
+      imagem: img,
+      X: this.x[index],
+      Y: this.y[index], 
+      Z: this.z[index], 
+      lat: this.lat[index],
+      lon: this.lon[index]
+    });
+
   }
 }

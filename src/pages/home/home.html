@@ -10,7 +10,7 @@
 	<ion-grid>
 		<ion-row *ngFor="let row of grid">
 			<ion-col width-50 *ngFor="let images of row">
-				<img src="{{images}}"/>
+				<img src="{{images}}" (click)="imageClick(images)"/>
 			</ion-col>
 		</ion-row>
 	</ion-grid>

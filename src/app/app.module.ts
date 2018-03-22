@@ -9,11 +9,13 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { ImagePage } from '../pages/image/image';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    ImagePage
   ],
   imports: [
     BrowserModule,
@@ -22,7 +24,8 @@ import { HomePage } from '../pages/home/home';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    ImagePage
   ],
   providers: [
     StatusBar,
