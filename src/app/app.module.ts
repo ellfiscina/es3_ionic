@@ -7,6 +7,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DeviceMotion } from '@ionic-native/device-motion';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ImagePage } from '../pages/image/image';
@@ -34,6 +35,7 @@ import { ImagePage } from '../pages/image/image';
     Camera,
     Geolocation,
     DeviceMotion,
+    NativeStorage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

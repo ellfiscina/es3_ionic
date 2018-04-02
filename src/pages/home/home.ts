@@ -4,6 +4,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { ImagePage } from '../image/image';
 
 @Component({
@@ -30,13 +31,15 @@ export class HomePage {
   constructor(
     public navCtrl: NavController, public navParams: NavParams, 
     public imagePicker: ImagePicker, public camera: Camera,
-    public geo: Geolocation, public deviceMotion: DeviceMotion) {
-  	//this.images = this.navParams.get('images');
+    public geo: Geolocation, public deviceMotion: DeviceMotion,
+    private nativeStorage: NativeStorage) {
+
   	this.grid = Array(Math.ceil(this.images.length/2));
   }
 
   ionViewDidLoad(){
-  	this.preencheGrid();
+    this.carregar();
+  	//this.preencheGrid();
   }
 
   preencheGrid(){
@@ -56,9 +59,15 @@ export class HomePage {
 
   async tiraFoto(): Promise<any>{
     try{
+      let image = {'Imagem': this.images, 'Latitude': this.lat, 'Longitude': this.lon, 'X': this.x, 'Y': this.y, 'Z': this.z};
       this.obterGeo();
       this.obterAcc();
       this.images.push(await this.camera.getPicture(this.options));
+      this.nativeStorage.setItem(
+        'obj', image).then(
+            () => console.log('Guardado'),
+            error => console.log('Erro', error)
+        );
       this.preencheGrid();
     }
     catch(err){
@@ -95,7 +104,6 @@ export class HomePage {
   }
 
   imageClick(img){
-
     let index = this.images.indexOf(img);
     this.navCtrl.push(ImagePage, {
       imagem: img,
@@ -105,6 +113,20 @@ export class HomePage {
       lat: this.lat[index],
       lon: this.lon[index]
     });
+  }
 
+  carregar(){
+    this.nativeStorage.getItem('obj').then(
+      data => {
+        this.images = data.Imagem;
+        this.lat = data.Latitude;
+        this.lon = data.Longitude;
+        this.x = data.X;
+        this.y = data.Y;
+        this.z = data.Z;
+        this.preencheGrid();
+      },
+      error => console.error(error)
+    );
   }
 }
