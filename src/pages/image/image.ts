@@ -24,6 +24,7 @@ export class ImagePage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  //Recupera as informações da imagem selecionada na galeria
   ionViewDidLoad() {
     this.imagem = this.navParams.get('imagem');
     this.x = this.navParams.get('X');
